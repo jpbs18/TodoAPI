@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
-const xss =  require('xss-clean');
+const xss = require('xss-clean');
 import authRoutes from './routes/authRoutes';
 import todosRoutes from './routes/todosRoutes';
 import errorMiddleware from './middlewares/errorMiddleware';
@@ -30,6 +30,9 @@ app.use(xss());
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/todos', authMiddleware, todosRoutes);
 app.use('/api/v1/users', usersRoutes);
+app.all('*', (req, res, next) =>
+  next({ status: 404, message: 'That route does not exist' })
+);
 app.use(errorMiddleware);
 
 mongoose
