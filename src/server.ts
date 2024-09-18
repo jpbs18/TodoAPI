@@ -10,6 +10,7 @@ import errorMiddleware from './middlewares/errorMiddleware';
 import authMiddleware from './middlewares/authMiddleware';
 import usersRoutes from './routes/usersRoutes';
 import limiter from './utils/rateLimiter';
+import cors from 'cors';
 
 dotenv.config({ path: './config.env' });
 const { PORT, MONGO_CONNECTION_STRING } = process.env;
@@ -21,6 +22,7 @@ if (!MONGO_CONNECTION_STRING) {
 }
 
 const app = express();
+app.use(cors())
 app.use(helmet());
 app.use('/api', limiter);
 app.use(express.json());
