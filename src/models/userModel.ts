@@ -1,5 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import validator from 'validator';
+import { hashPassword } from '../utils/utils';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -23,6 +24,13 @@ const UserSchema = new mongoose.Schema({
       ref: 'Task',
     },
   ],
+});
+
+UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await hashPassword(this.password);
+  next();
 });
 
 UserSchema.virtual('tasksCount').get(function () {

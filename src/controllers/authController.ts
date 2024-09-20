@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel';
-import { generateToken, hashPassword } from '../utils/utils';
+import { generateToken } from '../utils/utils';
 
 export const signup = async (
   req: Request,
@@ -28,11 +28,18 @@ export const signup = async (
       };
     }
 
-    const hashedPassword = await hashPassword(password);
+    if(password.length < 8){
+       throw {
+         status: 400,
+         message:
+           'Password has to have at least 8 characters.',
+       };
+    }
+
     const newUser = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password
     });
 
     res.status(201).json({

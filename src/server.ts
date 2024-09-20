@@ -22,7 +22,7 @@ if (!MONGO_CONNECTION_STRING) {
 }
 
 const app = express();
-app.use(cors())
+app.use(cors());
 app.use(helmet());
 app.use('/api', limiter);
 app.use(express.json());
